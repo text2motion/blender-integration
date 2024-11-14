@@ -1,0 +1,43 @@
+{
+    "cSpell.words": [
+        "Anson",
+        "augustocdias",
+        "azuretools",
+        "cweijan",
+        "dateutil",
+        "devcontainer",
+        "devcontainers",
+        "eamodio",
+        "editmode",
+        "foxundermoon",
+        "gltf",
+        "idname",
+        "KEYINGSET",
+        "levelname",
+        "localuser",
+        "Lucke",
+        "manylinux",
+        "mathutils",
+        "MERCHANTIBILITY",
+        "Mixamo",
+        "mixamorig",
+        "Newtonsoft",
+        "prefs",
+        "PTRACE",
+        "pydantic",
+        "PYTHONPATH",
+        "retargeting",
+        "seccomp",
+        "stuartleeks",
+        "svenstaro",
+        "tamasfe",
+        "typora",
+        "xhost",
+        "zaaack"
+    ],
+    "blender.addon.sourceDirectory": "src/text2motion",
+    "python.analysis.diagnosticSeverityOverrides": {
+        "reportInvalidTypeForm": "none"
+    },
+    "blender.addon.buildTaskName": "Prepare Extension"
+}

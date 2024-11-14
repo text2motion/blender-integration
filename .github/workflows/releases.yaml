@@ -1,0 +1,33 @@
+name: Upload artifact on release
+on:
+  push:
+    tags:
+      - 'releases/*'
+permissions:
+  contents: write
+jobs:
+  build:
+    name: Publish binaries
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout 🛎️
+      uses: actions/checkout@v3
+    - name: Set env 🛠️
+      run: |
+        echo "PACKAGE_VERSION=${GITHUB_REF#refs/*/releases/}" >> $GITHUB_ENV
+    - name: Build 📦️
+      run: ./gha_build.sh
+    - name: Upload Linux binaries to release 🚀
+      uses: svenstaro/upload-release-action@v2
+      with:
+        repo_token: ${{ secrets.GITHUB_TOKEN }}
+        file: build/text2motion-${{ env.PACKAGE_VERSION }}-linux_x64.zip
+        asset_name: text2motion-${{ env.PACKAGE_VERSION }}-linux_x64.zip
+        tag: ${{ github.ref }}
+    - name: Upload Windows binaries to release 🚀
+      uses: svenstaro/upload-release-action@v2
+      with:
+        repo_token: ${{ secrets.GITHUB_TOKEN }}
+        file: build/text2motion-${{ env.PACKAGE_VERSION }}-windows_x64.zip
+        asset_name: text2motion-${{ env.PACKAGE_VERSION }}-windows_x64.zip
+        tag: ${{ github.ref }}
