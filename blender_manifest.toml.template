@@ -1,0 +1,29 @@
+# This is a template for the blender_manifest.toml file
+# This file will overrides src/text2motion/blender_manifest.toml with environment variable
+# substituted from the environment
+# Do not modify src/text2motion/blender_manifest.toml directly as it will be overwritten.
+
+schema_version = "1.0.0"
+
+id = "text2motion"
+version = "${PACKAGE_VERSION}"
+name = "Text2Motion"
+tagline = "Generate 3D animations from text prompts using Generative AI"
+maintainer = "support@text2motion.ai"
+type = "add-on"
+
+website = "https://github.com/text2motion/blender-integration"
+
+tags = ["Animation"]
+
+blender_version_min = "4.2.0"
+
+license = ["SPDX:GPL-3.0-or-later", "SPDX:MIT"]
+copyright = ["2024 Text2Motion"]
+
+platforms = ["windows-x64", "linux-x64"]
+
+wheels = ${PACKAGE_WHEELS}
+
+[permissions]
+network = "Needed for making server request to generate animation"

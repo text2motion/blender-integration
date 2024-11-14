@@ -1,0 +1,3 @@
+pydantic >= 2
+typing-extensions >= 4.7.1
+text2motion_client_api @ https://github.com/text2motion/python-client/releases/download/releases%2F0.1.0/text2motion_client_api-0.1.0-py3-none-any.whl

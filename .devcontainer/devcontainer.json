@@ -1,0 +1,30 @@
+{
+	"name": "blender",
+	"dockerComposeFile": [],
+	"service": "blender",
+	"shutdownAction": "stopCompose",
+	"workspaceFolder": "/workspace/",
+	// Features to add to the dev container. More info: https://containers.dev/features.
+	"features": {
+		"ghcr.io/devcontainers/features/github-cli:1": {},
+		"ghcr.io/stuartleeks/dev-container-features/shell-history:0": {}
+	},
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				"ms-python.python",
+				"augustocdias.tasks-shell-input",
+				"tamasfe.even-better-toml",
+				"JacquesLucke.blender-development",
+				"streetsidesoftware.code-spell-checker",
+				"eamodio.gitlens",
+				"DavidAnson.vscode-markdownlint",
+				"zaaack.markdown-editor",
+				"ms-azuretools.vscode-docker",
+				"foxundermoon.shell-format"
+			]
+		}
+	},
+	"initializeCommand": "xhost +SI:localuser:root || true && if ! docker network ls | awk '{print $2}' | grep -qx 't2m-devcontainer-common'; then docker network create --driver bridge t2m-devcontainer-common; fi",
+	"updateContentCommand": "pip3 install -r requirements-dev.txt"
+}
