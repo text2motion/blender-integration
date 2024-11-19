@@ -67,7 +67,7 @@ The minimum supported Blender version is `4.2.0`. This package was only tested f
 
 This instruction uses an example Mixamo Rig provided in the repository. You may try using your own model as long as it is using Mixamo Rig.
 
-1. Download [Y Bot.glb](https://raw.githubusercontent.com/text2motion/blender-integration/refs/heads/main/assets/Y%20Bot.glb)
+1. Download [Y Bot.glb](https://github.com/text2motion/blender-integration/raw/refs/tags/releases/0.1.0/assets/Y%20Bot.glb?download=)
 2. In Blender, go to **File > Import > glTF 2.0 (.glb/gltf)**  
 ![Import GLB file](images/Animation_Generation-Import_GLB.png)
 3. Select the downloaded `Y Bot.glb` and click **Import glTF 2.0**
