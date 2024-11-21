@@ -108,3 +108,13 @@ By default, Text2Motion apply root motion to the generated animation. This means
 ![Apply Root Motion](images/Features_apply-root-motion.gif)
 
 Note that with **Apply Root Motion** unchecked, there will be no keyframe for the root bone. If the initial position of the model is away from the origin when the animation is generated, it will render from where the last position was instead of from the origin. You can t-pose the model to move it back to the origin by pressing `A`, `alt+G`, `alt+R`, `alt+S`.
+
+### Configure Animation Duration
+
+By default, Text2Motion will generate animation with estimated duration decided by the model. This means the animation duration could varies from request to request. If you want to control the duration of the animation, you can uncheck **Auto** and enter the durations you want for the generated animation.  
+![Auto Duration](images/Feature_Auto-Duration.png)  
+![Auto Duration](images/Feature_Manual-Duration.png)
+
+Note that since the server only accept duration in seconds, the frames option is rounded to the nearest seconds based on the frame-per-second configuration. By default it is `24`, frames can only be incremented by multiple of `24`.
+
+You can also change the Animation timeline's unit from frames to seconds by pressing `Ctrl+T`

@@ -16,7 +16,8 @@ from .t2m_server_request_wrapper import get_target_skeleton, load_frames, make_s
 import logging
 import bpy
 import webbrowser
-from bpy.props import (StringProperty, BoolProperty, PointerProperty)
+from bpy.props import (StringProperty, BoolProperty,
+                       PointerProperty, IntProperty, EnumProperty)
 from text2motion_client_api.exceptions import ApiException
 from http import HTTPStatus
 
@@ -50,8 +51,37 @@ def _label_multiline(context, text, parent):
 #    Scene Properties
 # ------------------------------------------------------------------------
 
+MAX_DURATION_SECONDS = 30
+current_duration_unit_selector = 'seconds'
+current_duration = 5
 
 class T2MSceneProperties(bpy.types.PropertyGroup):
+    def set_frame(self, context):
+        fps = bpy.context.scene.render.fps
+        MAX_FRAMES = MAX_DURATION_SECONDS * fps
+        if self.frames > MAX_FRAMES:
+            self.frames = MAX_FRAMES
+        elif self.frames < fps:
+            self.frames = fps
+        elif self.frames % fps != 0:
+            # this allow the widget to snap to the nearest fps increment
+            remainder = self.frames % fps
+            if remainder < round(fps / 2):
+                self.frames = self.frames - remainder + fps
+            else:
+                self.frames = self.frames - remainder
+
+    def change_duration_unit(self, context):
+        global current_duration_unit_selector, current_duration
+        if current_duration_unit_selector != self.duration_unit:
+            prev_duration_unit_selector = current_duration_unit_selector
+            current_duration_unit_selector = self.duration_unit
+            current_duration = self.get(prev_duration_unit_selector, 5)
+            if prev_duration_unit_selector == 'seconds':
+                self.frames = current_duration * bpy.context.scene.render.fps
+            else:
+                self.seconds = round(current_duration / bpy.context.scene.render.fps)
+
     prompt: StringProperty(
         name="Prompt",
         description="Text prompt for the animation to generate.",
@@ -73,6 +103,34 @@ class T2MSceneProperties(bpy.types.PropertyGroup):
         name="Apply Root Motion",
         description="Apply root motion for the generated animation",
         default=True,
+    )
+    duration_unit: EnumProperty(
+        name="",
+        description="Duration unit selector",
+        items=[('seconds', "Seconds", ""),
+               ('frames', "Frames",
+                "Rounded to the nearest FPS increment"),
+               ],
+        update=change_duration_unit,
+    )
+    is_auto_duration: BoolProperty(
+        name="Auto",
+        description="Decide duration automatically",
+        default=True,
+    )
+    seconds: IntProperty(
+        name="",
+        description="The duration of the animation in seconds",
+        default=5,
+        min=1,
+        max=MAX_DURATION_SECONDS,
+    )
+    frames: IntProperty(
+        name="",
+        description="The duration of the animation in number of frames.\nRounded to the nearest FPS increment",
+        default=120,
+        min=1,
+        update=set_frame,
     )
 
 
@@ -155,10 +213,21 @@ class T2MServerRequestOperator(bpy.types.Operator):
         prompt = context.scene.t2m_scene_properties.prompt
         logger.debug(f"Prompt: {prompt}")
 
+        if not context.scene.t2m_scene_properties.is_auto_duration:
+            if context.scene.t2m_scene_properties.duration_unit == 'seconds':
+                seconds = context.scene.t2m_scene_properties.seconds
+            else:
+                seconds = round(context.scene.t2m_scene_properties.frames / bpy.context.scene.render.fps)
+        else:
+            seconds = 0
+
         response = None
         try:
             response = make_server_request(
-                prompt, target_skeleton, addon_prefs.api_key)
+                prompt, 
+                target_skeleton, 
+                seconds, 
+                addon_prefs.api_key)
         except ApiException as e:
             logger.error(
                 f"Failed to generate request for prompt: {prompt} \n"
@@ -300,13 +369,6 @@ class OBJECT_PT_T2MAdvancedOptionsPanel(T2MPanelBase, bpy.types.Panel):
     bl_label = "Advanced Options"
     bl_options = {"DEFAULT_CLOSED"}
 
-    @ classmethod
-    def poll(self, context):
-        # only show panel if API key is set
-        preferences = context.preferences
-        addon_prefs = preferences.addons[__name__].preferences
-        return addon_prefs.api_key
-
     def draw(self, context):
         layout = self.layout
         col = layout.column(align=True)
@@ -314,17 +376,31 @@ class OBJECT_PT_T2MAdvancedOptionsPanel(T2MPanelBase, bpy.types.Panel):
         col.prop(context.scene.t2m_scene_properties, "is_root_motion_enabled")
 
 
+class OBJECT_PT_T2MAnimationDurationOptionsPanel(T2MPanelBase, bpy.types.Panel):
+    bl_parent_id = "OBJECT_PT_T2MAdvancedOptionsPanel"
+    bl_label = "Animation Duration"
+
+    def draw(self, context):
+        global current_duration_unit_selector, current_duration
+        layout = self.layout
+        col = layout.column(align=True)
+        col.prop(context.scene.t2m_scene_properties, "is_auto_duration")
+
+        if not context.scene.t2m_scene_properties.is_auto_duration:
+            row = col.row()
+            split = row.split(factor=0.6)
+            col = split.column()
+            col.prop(context.scene.t2m_scene_properties,
+                    context.scene.t2m_scene_properties.duration_unit)
+            split = split.split()
+            col = split.column()
+            col.prop(context.scene.t2m_scene_properties, "duration_unit")
+
+
 class OBJECT_PT_T2MLicenseInfoPanel(T2MPanelBase, bpy.types.Panel):
     bl_parent_id = "OBJECT_PT_T2MPanel"
     bl_label = "License Info"
     bl_options = {"DEFAULT_CLOSED"}
-
-    @ classmethod
-    def poll(self, context):
-        # only show panel if API key is set
-        preferences = context.preferences
-        addon_prefs = preferences.addons[__name__].preferences
-        return addon_prefs.api_key
 
     def draw(self, context):
         layout = self.layout
@@ -341,6 +417,7 @@ classes = (
     OBJECT_PT_T2MConfigureApiKeyPanel,
     OBJECT_PT_T2MPanel,
     OBJECT_PT_T2MAdvancedOptionsPanel,
+    OBJECT_PT_T2MAnimationDurationOptionsPanel,
     OBJECT_PT_T2MLicenseInfoPanel,
     T2MServerRequestOperator,
     T2MSaveApiKeyOperator,
