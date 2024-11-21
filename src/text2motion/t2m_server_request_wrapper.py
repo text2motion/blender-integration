@@ -173,7 +173,12 @@ def load_frames(
                 data_path='location', frame=frame)
 
 
-def make_server_request(prompt, target_skeleton, api_key):
+def make_server_request(
+        prompt, 
+        target_skeleton, 
+        seconds,
+        api_key,
+        ):
     logger.info(f"Requesting Text2Motion Server with prompt: {prompt}")
     configuration = text2motion_client_api.Configuration(
         host="https://api.text2motion.ai"
@@ -185,6 +190,7 @@ def make_server_request(prompt, target_skeleton, api_key):
         generate_request_body = text2motion_client_api.GenerateRequestBody(
             prompt=prompt,
             target_skeleton=target_skeleton,
+            seconds=seconds,
         )
 
         # Generate

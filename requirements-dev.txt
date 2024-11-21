@@ -1,5 +1,5 @@
-# Requirements needed both inside of Blender add-on and the development enviornment
+# Requirements needed both inside of Blender add-on and the development environment
 -r requirements.txt
 
-# Requirements needed only in the development enviornment
+# Requirements needed only in the development environment
 fake-bpy-module
