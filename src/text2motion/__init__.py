@@ -179,6 +179,11 @@ class T2MOpenDeveloperPortalOperator(bpy.types.Operator):
     bl_label = "Open Developer Portal"
 
     def execute(self, context):
+        if not bpy.app.online_access:
+            self.report(
+                {"ERROR"}, "Cannot open developer portal without internet access permission")
+            return {'CANCELLED'}
+        
         webbrowser.open('https://developer.text2motion.ai/get-started')
         return {'FINISHED'}
 
@@ -189,6 +194,11 @@ class T2MOpenLicenseLinkOperator(bpy.types.Operator):
     bl_label = "CC-by-4.0 License"
 
     def execute(self, context):
+        if not bpy.app.online_access:
+            self.report(
+                {"ERROR"}, "Cannot open license link without internet access permission")
+            return {'CANCELLED'}
+        
         webbrowser.open('https://creativecommons.org/licenses/by/4.0/')
         return {'FINISHED'}
 
@@ -223,6 +233,11 @@ class T2MServerRequestOperator(bpy.types.Operator):
 
         response = None
         try:
+            if not bpy.app.online_access:
+                self.report(
+                    {"ERROR"}, "Cannot make server request without internet access permission")
+                return {'CANCELLED'}
+            
             response = make_server_request(
                 prompt, 
                 target_skeleton, 
@@ -318,6 +333,21 @@ class T2MPanelBase:
     bl_options = {'HEADER_LAYOUT_EXPAND'}
 
 
+class OBJECT_PT_T2MAllowInternetAccessPanel(T2MPanelBase, bpy.types.Panel):
+    bl_idname = "OBJECT_PT_T2MAllowInternetAccessPanel"
+    bl_label = "Text2Motion"
+
+    @ classmethod
+    def poll(self, context):
+        # only show panel if internet access is not allowed
+        return not bpy.app.online_access
+
+    def draw(self, context):
+        layout = self.layout
+        _label_multiline(
+            context, "Allow Online Access must be enabled to use this extension. "
+            "Enable it in Edit > Preferences > System > Network > Allow Online Access", layout)
+
 class OBJECT_PT_T2MConfigureApiKeyPanel(T2MPanelBase, bpy.types.Panel):
     bl_idname = "OBJECT_PT_T2MConfigureApiKeyPanel"
     bl_label = "Text2Motion"
@@ -327,7 +357,7 @@ class OBJECT_PT_T2MConfigureApiKeyPanel(T2MPanelBase, bpy.types.Panel):
         # only show panel if API key is not set
         preferences = context.preferences
         addon_prefs = preferences.addons[__package__].preferences
-        return not addon_prefs.api_key
+        return not addon_prefs.api_key and bpy.app.online_access
 
     def draw(self, context):
         layout = self.layout
@@ -350,7 +380,7 @@ class OBJECT_PT_T2MPanel(T2MPanelBase, bpy.types.Panel):
         # only show panel if API key is set
         preferences = context.preferences
         addon_prefs = preferences.addons[__package__].preferences
-        return addon_prefs.api_key
+        return addon_prefs.api_key and bpy.app.online_access
 
     def draw(self, context):
         layout = self.layout
@@ -414,6 +444,7 @@ class OBJECT_PT_T2MLicenseInfoPanel(T2MPanelBase, bpy.types.Panel):
 
 
 classes = (
+    OBJECT_PT_T2MAllowInternetAccessPanel,
     OBJECT_PT_T2MConfigureApiKeyPanel,
     OBJECT_PT_T2MPanel,
     OBJECT_PT_T2MAdvancedOptionsPanel,
