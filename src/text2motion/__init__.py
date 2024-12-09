@@ -168,7 +168,7 @@ class T2MSaveApiKeyOperator(bpy.types.Operator):
     def execute(self, context):
         api_key = context.scene.t2m_scene_properties.api_key
         preferences = context.preferences
-        addon_prefs = preferences.addons[__name__].preferences
+        addon_prefs = preferences.addons[__package__].preferences
         addon_prefs.api_key = api_key
         return {'FINISHED'}
 
@@ -209,7 +209,7 @@ class T2MServerRequestOperator(bpy.types.Operator):
         target_skeleton = get_target_skeleton(active_object)
 
         preferences = context.preferences
-        addon_prefs = preferences.addons[__name__].preferences
+        addon_prefs = preferences.addons[__package__].preferences
         prompt = context.scene.t2m_scene_properties.prompt
         logger.debug(f"Prompt: {prompt}")
 
@@ -326,7 +326,7 @@ class OBJECT_PT_T2MConfigureApiKeyPanel(T2MPanelBase, bpy.types.Panel):
     def poll(self, context):
         # only show panel if API key is not set
         preferences = context.preferences
-        addon_prefs = preferences.addons[__name__].preferences
+        addon_prefs = preferences.addons[__package__].preferences
         return not addon_prefs.api_key
 
     def draw(self, context):
@@ -349,7 +349,7 @@ class OBJECT_PT_T2MPanel(T2MPanelBase, bpy.types.Panel):
     def poll(self, context):
         # only show panel if API key is set
         preferences = context.preferences
-        addon_prefs = preferences.addons[__name__].preferences
+        addon_prefs = preferences.addons[__package__].preferences
         return addon_prefs.api_key
 
     def draw(self, context):
