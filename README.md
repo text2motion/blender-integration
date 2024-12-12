@@ -18,8 +18,10 @@ Currently, the animation can only be generated for character with Mixamo rig nam
    4. [Animation Generation](#animation-generation)
 2. [Development](#development)
    1. [Building the extension](#building-the-extension)
+   2. [Blender Extension Review](#extension-review)
 3. [Features](#features)
    1. [Apply Root Motion](#apply-root-motion)
+   2. [Configure Animation Duration](#configure-animation-duration)
 
 ## Getting Started
 
@@ -89,6 +91,18 @@ To get started:
 2. Install [Dev Container extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers)
 3. Press `Ctrl+shift+P` and select `Dev Containers: Reopen in Container`
 4. From here, you can launch Blender with the extension installed by pressing `Ctrl+shift+P` and select `Blender: Build and Start`. To reload the changes, select `Blender: Reload Addons`
+
+### Extension Review
+
+Make sure changes follows the [Extension Moderation Guideline](https://developer.blender.org/docs/features/extensions/moderation/guidelines/) before submitting the new revision.
+
+Run a linter on all scripts:
+
+```bash
+find "." -iname "*.py" | xargs ruff check --output-format=concise --ignore=E402,E741,E731
+```
+
+*While this doesn't need to pass without warnings: large numbers of unused imports, undefined variables or invalid syntax are a bad sign and might hint at inclusion of outdated/unused code.*
 
 ### Troubleshooting
 

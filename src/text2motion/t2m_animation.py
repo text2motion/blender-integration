@@ -1,6 +1,6 @@
 from typing import Dict, List
 
-from pydantic import BaseModel, Field, field_serializer, model_serializer
+from pydantic import BaseModel, Field
 
 T2M_SAVE_FILE_VERSION_1_0 = "1.0"
 

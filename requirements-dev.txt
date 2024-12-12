@@ -3,3 +3,6 @@
 
 # Requirements needed only in the development environment
 fake-bpy-module
+
+# Needed for Extension review verification
+ruff
