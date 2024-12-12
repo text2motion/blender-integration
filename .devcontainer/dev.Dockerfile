@@ -22,9 +22,9 @@ RUN apt-get update &&\
         libgl1-mesa-glx 
 
 
-ARG BLENDER_MAJOR_VERISON=4.2
-ARG BLENDER_VERSION=${BLENDER_MAJOR_VERISON}.3
-RUN wget https://mirrors.ocf.berkeley.edu/blender/release/Blender${BLENDER_MAJOR_VERISON}/blender-${BLENDER_VERSION}-linux-x64.tar.xz  \
+ARG BLENDER_MAJOR_VERSION=4.2
+ARG BLENDER_VERSION=${BLENDER_MAJOR_VERSION}.3
+RUN wget https://mirrors.ocf.berkeley.edu/blender/release/Blender${BLENDER_MAJOR_VERSION}/blender-${BLENDER_VERSION}-linux-x64.tar.xz  \
         && tar -xvf blender-${BLENDER_VERSION}-linux-x64.tar.xz --strip-components=1 -C /bin \
         && rm -rf blender-${BLENDER_VERSION}-linux-x64.tar.xz \
         && rm -rf blender-${BLENDER_VERSION}-linux-x64
