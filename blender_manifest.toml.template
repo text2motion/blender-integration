@@ -21,8 +21,6 @@ blender_version_min = "4.2.0"
 license = ["SPDX:GPL-3.0-or-later", "SPDX:MIT"]
 copyright = ["2024 Text2Motion"]
 
-platforms = ["windows-x64", "linux-x64"]
-
 wheels = ${PACKAGE_WHEELS}
 
 [permissions]

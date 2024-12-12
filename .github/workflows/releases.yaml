@@ -17,17 +17,10 @@ jobs:
         echo "PACKAGE_VERSION=${GITHUB_REF#refs/*/releases/}" >> $GITHUB_ENV
     - name: Build 📦️
       run: ./gha_build.sh
-    - name: Upload Linux binaries to release 🚀
+    - name: Upload binary to release 🚀
       uses: svenstaro/upload-release-action@v2
       with:
         repo_token: ${{ secrets.GITHUB_TOKEN }}
-        file: build/text2motion-${{ env.PACKAGE_VERSION }}-linux_x64.zip
-        asset_name: text2motion-${{ env.PACKAGE_VERSION }}-linux_x64.zip
-        tag: ${{ github.ref }}
-    - name: Upload Windows binaries to release 🚀
-      uses: svenstaro/upload-release-action@v2
-      with:
-        repo_token: ${{ secrets.GITHUB_TOKEN }}
-        file: build/text2motion-${{ env.PACKAGE_VERSION }}-windows_x64.zip
-        asset_name: text2motion-${{ env.PACKAGE_VERSION }}-windows_x64.zip
+        file: build/text2motion-${{ env.PACKAGE_VERSION }}.zip
+        asset_name: text2motion-${{ env.PACKAGE_VERSION }}.zip
         tag: ${{ github.ref }}

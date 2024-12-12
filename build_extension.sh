@@ -5,4 +5,4 @@ set -e
 
 rm -rf build/
 mkdir build/
-blender --command extension build --split-platforms --source-dir ./src/text2motion --output-dir ./build
+blender --command extension build --source-dir ./src/text2motion --output-dir ./build
