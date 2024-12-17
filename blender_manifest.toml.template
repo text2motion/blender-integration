@@ -1,7 +1,7 @@
 # This is a template for the blender_manifest.toml file
-# This file will overrides src/text2motion/blender_manifest.toml with environment variable
+# This file will overrides addons/text2motion/blender_manifest.toml with environment variable
 # substituted from the environment
-# Do not modify src/text2motion/blender_manifest.toml directly as it will be overwritten.
+# Do not modify addons/text2motion/blender_manifest.toml directly as it will be overwritten.
 
 schema_version = "1.0.0"
 

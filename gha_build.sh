@@ -6,10 +6,9 @@ if [ -z "$PACKAGE_VERSION" ]; then
     exit 1
 fi
 
-docker build -t blender-devcontainer .devcontainer/ -f .devcontainer/dev.Dockerfile
+docker build -t blender-devcontainer . -f .devcontainer/dev.Dockerfile
 docker run --rm \
-    --user $(id -u):$(id -g) \
     -v "${PWD}:/local" \
     -e PACKAGE_VERSION=$PACKAGE_VERSION \
     blender-devcontainer \
-    /bin/bash build_extension.sh
+    /bin/bash /local/build_extension.sh
