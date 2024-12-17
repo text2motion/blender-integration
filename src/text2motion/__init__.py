@@ -12,7 +12,7 @@
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 import textwrap
-from .t2m_server_request_wrapper import get_target_skeleton, load_frames, make_server_request
+from .t2m_server_request_wrapper import ModelVersion, get_target_skeleton, load_frames, make_server_request
 import logging
 import bpy
 import webbrowser
@@ -132,6 +132,13 @@ class T2MSceneProperties(bpy.types.PropertyGroup):
         min=1,
         update=set_frame,
     )
+    model_version: EnumProperty(
+        name="Version",
+        description="Version of the model to use",
+        items=[(ModelVersion.STABLE, ModelVersion.STABLE, ""),
+               (ModelVersion.LAB_V_0_1_0, ModelVersion.LAB_V_0_1_0, ""),
+               ]
+    )
 
 
 # ------------------------------------------------------------------------
@@ -242,7 +249,8 @@ class T2MServerRequestOperator(bpy.types.Operator):
                 prompt, 
                 target_skeleton, 
                 seconds, 
-                addon_prefs.api_key)
+                addon_prefs.api_key,
+                context.scene.t2m_scene_properties.model_version)
         except ApiException as e:
             logger.error(
                 f"Failed to generate request for prompt: {prompt} \n"
@@ -309,7 +317,7 @@ class T2MServerRequestOperator(bpy.types.Operator):
             logger.error(
                 "Exception when calling GenerateApi->generate_api_generate_post: %s\n" % e)
             self.report(
-                {"ERROR"}, f"Failed to make Text2Motion request for prompt: {prompt}")
+                {"ERROR"}, f"Failed to make Text2Motion request for prompt: {prompt}, {e}")
 
         if not response:
             return {'CANCELLED'}
@@ -404,7 +412,7 @@ class OBJECT_PT_T2MAdvancedOptionsPanel(T2MPanelBase, bpy.types.Panel):
         col = layout.column(align=True)
         col.prop(context.scene.t2m_scene_properties, "action_name")
         col.prop(context.scene.t2m_scene_properties, "is_root_motion_enabled")
-
+        col.prop(context.scene.t2m_scene_properties, "model_version")
 
 class OBJECT_PT_T2MAnimationDurationOptionsPanel(T2MPanelBase, bpy.types.Panel):
     bl_parent_id = "OBJECT_PT_T2MAdvancedOptionsPanel"

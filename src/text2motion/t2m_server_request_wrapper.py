@@ -1,3 +1,4 @@
+from enum import Enum
 import math
 from .t2m_animation import T2MFrames
 import logging
@@ -35,6 +36,10 @@ t2m_to_blender_matrix = bpy_extras.io_utils.axis_conversion(from_forward=T2M_FOR
 
 cached_target_skeleton = None
 cached_active_object = None
+
+class ModelVersion(str, Enum):
+    STABLE = 'stable'
+    LAB_V_0_1_0 = 'labs (0.1.0)'
 
 
 def get_target_skeleton(active_object):
@@ -174,10 +179,11 @@ def load_frames(
 
 
 def make_server_request(
-        prompt, 
-        target_skeleton, 
-        seconds,
-        api_key,
+        prompt: str, 
+        target_skeleton: Skeleton, 
+        seconds: int,
+        api_key: str,
+        model_version: ModelVersion = ModelVersion.STABLE
         ):
     logger.info(f"Requesting Text2Motion Server with prompt: {prompt}")
     configuration = text2motion_client_api.Configuration(
@@ -193,7 +199,11 @@ def make_server_request(
             seconds=seconds,
         )
 
-        # Generate
-        api_response = api_instance.generate_api_generate_post(
-            generate_request_body)
+        match model_version:
+            case ModelVersion.LAB_V_0_1_0:
+                api_response = api_instance.generate_api_labs010_generate_post(
+                    generate_request_body)
+            case _:
+                api_response = api_instance.generate_api_generate_post(
+                    generate_request_body)
         return api_response.result
