@@ -12,6 +12,11 @@
             "label": "Build Extension",
             "type": "shell",
             "command": "./build_extension.sh"
+        },
+        {
+            "label": "kill_debug",
+            "type": "shell",
+            "command": "kill -9 $(cat /tmp/debug.pid)"
         }
     ]
 }
