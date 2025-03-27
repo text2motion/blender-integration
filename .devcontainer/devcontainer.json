@@ -1,30 +1,32 @@
 {
-	"name": "blender",
-	"dockerComposeFile": [],
-	"service": "blender",
-	"shutdownAction": "stopCompose",
-	"workspaceFolder": "/workspace/",
-	// Features to add to the dev container. More info: https://containers.dev/features.
-	"features": {
-		"ghcr.io/devcontainers/features/github-cli:1": {},
-		"ghcr.io/stuartleeks/dev-container-features/shell-history:0": {}
-	},
+	"name": "dev",
+	"dockerFile": "dev.Dockerfile",
+	"context": "..",
 	"customizations": {
 		"vscode": {
 			"extensions": [
 				"ms-python.python",
 				"augustocdias.tasks-shell-input",
-				"tamasfe.even-better-toml",
-				"JacquesLucke.blender-development",
-				"streetsidesoftware.code-spell-checker",
-				"eamodio.gitlens",
-				"DavidAnson.vscode-markdownlint",
-				"zaaack.markdown-editor",
-				"ms-azuretools.vscode-docker",
-				"foxundermoon.shell-format"
+				"zaaack.markdown-editor"
 			]
 		}
 	},
-	"initializeCommand": "xhost +SI:localuser:root || true && if ! docker network ls | awk '{print $2}' | grep -qx 't2m-devcontainer-common'; then docker network create --driver bridge t2m-devcontainer-common; fi",
-	"updateContentCommand": "pip3 install -r requirements-dev.txt"
+	"containerEnv": {
+		"XDG_CONFIG_HOME": "${containerWorkspaceFolder}/config",
+		"BLENDER_USER_SCRIPTS": "${containerWorkspaceFolder}",
+		"BLENDER_SYSTEM_EXTENSIONS": "${containerWorkspaceFolder}",
+		"BLENDER_USER_CONFIG": "${containerWorkspaceFolder}/config",
+		"PACKAGE_VERSION": "0.0.0-local",
+		"PYTHONPATH": "$PYTHONPATH:/usr/bin/4.2/scripts/modules:/usr/bin/4.2/python/lib/python3.11/site-packages:${containerWorkspaceFolder}/addons/text2motion"
+	},
+	"initializeCommand": "xhost +SI:localuser:root || true",
+	"runArgs": [
+		"--privileged",
+		"-e", "DISPLAY=${env:DISPLAY}",
+		"-v", "/tmp/.X11-unix:/tmp/.X11-unix",
+		"--gpus", "all",
+		"--cap-add=SYS_PTRACE", "--security-opt", "seccomp=unconfined",
+		"--network", "host"
+	],
+	"updateContentCommand": "pip3 install -r ${containerWorkspaceFolder}/requirements.txt"
 }

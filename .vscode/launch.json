@@ -1,0 +1,23 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Debug Blender",
+            "type": "debugpy",
+            "request": "attach",
+            "processId": "${input:blender_pid}",
+            "justMyCode": true,
+            "postDebugTask": "kill_debug"
+        }
+    ],
+    "inputs": [
+        {
+            "type": "command",
+            "id": "blender_pid",
+            "command": "shellCommand.execute",
+            "args": {
+                "command": "blender --no-window-focus >/dev/null 2>&1 & echo $! | tee /tmp/debug.pid"
+            }
+        }
+    ]
+}
