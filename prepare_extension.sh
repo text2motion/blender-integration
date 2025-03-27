@@ -55,7 +55,7 @@ update_wheel() {
 # Main script execution
 handle_options "$@"
 
-cd src/text2motion
+cd addons/text2motion
 
 should_update_wheel=true
 if [ "$force_wheel_update" = false ]; then
@@ -92,5 +92,5 @@ export PACKAGE_WHEELS=$result
 
 cd ../..
 
-echo "Generating src/text2motion/blender_manifest.toml..."
-envsubst <blender_manifest.toml.template >src/text2motion/blender_manifest.toml
+echo "Generating addons/text2motion/blender_manifest.toml..."
+envsubst <blender_manifest.toml.template >addons/text2motion/blender_manifest.toml
