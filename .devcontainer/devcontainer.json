@@ -15,6 +15,7 @@
 		"XDG_CONFIG_HOME": "${containerWorkspaceFolder}/config",
 		"BLENDER_USER_SCRIPTS": "${containerWorkspaceFolder}",
 		"BLENDER_SYSTEM_EXTENSIONS": "${containerWorkspaceFolder}",
+		"BLENDER_USER_CONFIG": "${containerWorkspaceFolder}/config",
 		"PACKAGE_VERSION": "0.0.0-local",
 		"PYTHONPATH": "$PYTHONPATH:/usr/bin/4.2/scripts/modules:/usr/bin/4.2/python/lib/python3.11/site-packages:${containerWorkspaceFolder}/addons/text2motion"
 	},

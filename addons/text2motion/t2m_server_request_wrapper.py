@@ -167,7 +167,14 @@ def load_frames(
             current_bone.keyframe_insert(
                 data_path='rotation_quaternion', frame=frame)
 
+        first_y = None
         for frame_timestamp_str, vector3 in track.position.items():
+            if first_y is None:
+                first_y = vector3[1]
+                vector3[1] = 0.0
+            else:
+                vector3[1] = vector3[1] - first_y
+
             frame = float(
                 frame_timestamp_str) * bpy.context.scene.render.fps
             current_bone.location[0] = vector3[0]
